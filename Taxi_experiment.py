@@ -2,7 +2,7 @@
 from pyspark.sql import SparkSession
 spark = SparkSession.builder.getOrCreate()
 raw_data = spark.read.format("delta").load("/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
-display(raw_data)
+
 
 # COMMAND ----------
 
@@ -70,10 +70,6 @@ def get_latest_model_version(model_name):
 # COMMAND ----------
 
 taxi_data = rounded_taxi_data(raw_data)
-
-# COMMAND ----------
-
-display(taxi_data)
 
 # COMMAND ----------
 
@@ -161,11 +157,6 @@ training_df = training_set.load_df()
 
 # COMMAND ----------
 
-# Display the training dataframe, and note that it contains both the raw input data and the features from the Feature Store, like `dropoff_is_weekend`
-display(training_df)
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC Train a LightGBM model on the data returned by `TrainingSet.to_df`, then log the model with `FeatureStoreClient.log_model`. The model will be packaged with feature metadata.
 
@@ -231,7 +222,7 @@ new_taxi_data = rounded_taxi_data(raw_data)
 
 cols = ['fare_amount', 'trip_distance', 'pickup_zip', 'dropoff_zip', 'rounded_pickup_datetime', 'rounded_dropoff_datetime']
 new_taxi_data_reordered = new_taxi_data.select(cols)
-display(new_taxi_data_reordered)
+
 
 # COMMAND ----------
 
@@ -246,10 +237,6 @@ model_uri = f"models:/taxi_example_fare_packaged/{latest_model_version}"
 
 # Call score_batch to get the predictions from the model
 with_predictions = fs.score_batch(model_uri, new_taxi_data)
-
-# COMMAND ----------
-
-display(with_predictions)
 
 # COMMAND ----------
 
@@ -283,4 +270,3 @@ with_predictions_reordered = (
     )
 )
 
-display(with_predictions_reordered)

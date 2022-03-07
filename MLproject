@@ -1,5 +1,5 @@
 name: taxi_experiment
-
+conda_env: conda.yaml
 entry_points:
   main:
       command: "python Taxi_experiment.py"

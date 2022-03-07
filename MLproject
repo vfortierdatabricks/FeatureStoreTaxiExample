@@ -2,4 +2,4 @@ name: taxi_experiment
 
 entry_points:
   main:
-      command: Taxi_experiment.py
+      command: mlflow-project/Taxi_experiment.py

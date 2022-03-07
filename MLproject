@@ -2,5 +2,4 @@ name: taxi_experiment
 
 entry_points:
   main:
-    parameters:
-      data_file: Taxi_experiment
+      command: Taxi_experiment

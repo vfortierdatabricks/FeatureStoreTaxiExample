@@ -1,4 +1,6 @@
 # Databricks notebook source
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
 raw_data = spark.read.format("delta").load("/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
 display(raw_data)
 

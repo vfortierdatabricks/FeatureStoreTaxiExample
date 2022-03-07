@@ -16,6 +16,7 @@ raw_data = spark.read.format("delta").load("/databricks-datasets/nyctaxi-with-zi
 
 # COMMAND ----------
 
+from pyspark.sql.functions import udf
 from pyspark.sql import *
 from pyspark.sql.functions import current_timestamp, lit
 from pyspark.sql.types import IntegerType

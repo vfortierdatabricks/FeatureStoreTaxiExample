@@ -53,30 +53,7 @@ def get_latest_model_version(model_name):
 taxi_data = rounded_taxi_data(raw_data)
 # If you are running Databricks Runtime for Machine Learning 9.1 or above, you can uncomment the code in this cell and use it instead of the code in Cmd 34.
 
-from databricks.feature_store import FeatureLookup
 import mlflow
-
-pickup_features_table = "feature_store_taxi_example.trip_pickup_features"
-dropoff_features_table = "feature_store_taxi_example.trip_dropoff_features"
-
-pickup_feature_lookups = [
-    FeatureLookup( 
-      table_name = pickup_features_table,
-      feature_names = ["mean_fare_window_1h_pickup_zip", "count_trips_window_1h_pickup_zip"],
-      lookup_key = ["pickup_zip", "rounded_pickup_datetime"],
-    ),
-]
-
-dropoff_feature_lookups = [
-    FeatureLookup( 
-      table_name = dropoff_features_table,
-      feature_names = ["count_trips_window_30m_dropoff_zip", "dropoff_is_weekend"],
-      lookup_key = ["dropoff_zip", "rounded_dropoff_datetime"],
-    ),
-]
-
-from databricks import feature_store
-fs = feature_store.FeatureStoreClient()
 
 # Start an mlflow run, which is needed for the feature store to log the model
 mlflow.start_run() 
@@ -88,7 +65,6 @@ exclude_columns = ["rounded_pickup_datetime", "rounded_dropoff_datetime"]
 # Create the training set that includes the raw input data merged with corresponding features from both feature tables
 training_set = fs.create_training_set(
   taxi_data,
-  feature_lookups = pickup_feature_lookups + dropoff_feature_lookups,
   label = "fare_amount",
   exclude_columns = exclude_columns
 )

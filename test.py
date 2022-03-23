@@ -1,16 +1,29 @@
-from pyspark.sql import SparkSession
-import mlflow
-from sklearn import preprocessing
+# Databricks notebook source
+#from pyspark.sql import SparkSession
+#spark = SparkSession.builder.getOrCreate()
 from pyspark.ml.feature import VectorAssembler, VectorIndexer
 from pyspark.ml.regression import DecisionTreeRegressor
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml import Pipeline
+import mlflow
 
-spark = SparkSession.builder.getOrCreate()
 raw_data = spark.read.format("delta").load("/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
 
-train_df, test_df, validate_df = raw_data.randomSplit([0.8, 0.1, 0.1], seed=12345)
+train_df, test_df = raw_data.randomSplit([0.8, 0.1], seed=42)
 
+
+# COMMAND ----------
+
+raw_data.display()
+
+# COMMAND ----------
+
+train_df.display()
+
+# COMMAND ----------
+
+import mlflow
+from sklearn import preprocessing
 lbl = preprocessing.LabelEncoder()
 featuresCols = raw_data.columns[-2:]
 
@@ -40,3 +53,8 @@ with mlflow.start_run():
   rmse = evaluator.evaluate(predictionsDF, {evaluator.metricName: "rmse"})
   mlflow.log_metric("r2", r2)
   mlflow.log_metric("rmse", rmse)
+
+
+# COMMAND ----------
+
+

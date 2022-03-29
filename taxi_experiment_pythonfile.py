@@ -7,6 +7,10 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml import Pipeline
 
 spark = SparkSession.builder.getOrCreate()
+
+spark.sql('show databases').show()
+
+
 raw_data = spark.read.format("delta").load("/databricks-datasets/nyctaxi-with-zipcodes/subsampled")
 
 train_df, test_df, validate_df = raw_data.randomSplit([0.8, 0.1, 0.1], seed=12345)

@@ -6,7 +6,7 @@ from pyspark.ml.regression import DecisionTreeRegressor
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml import Pipeline
 
-spark = SparkSession.builder.getOrCreate()
+spark = SparkSession.builder.enableHiveSupport().getOrCreate()
 
 spark.sql('show databases').show()
 
